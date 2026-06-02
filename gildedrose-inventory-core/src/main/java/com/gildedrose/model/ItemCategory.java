@@ -6,7 +6,7 @@ public enum ItemCategory {
     SULFURAS("Sulfuras, Hand of Ragnaros"),
     STANDARD("Standard");
 
-    private String name;
+    private final String name;
     ItemCategory(String name){
         this.name = name;
     }
