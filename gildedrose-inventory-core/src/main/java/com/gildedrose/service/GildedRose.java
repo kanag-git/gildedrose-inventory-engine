@@ -17,8 +17,7 @@ public class GildedRose {
     public void updateQuality() {
         for (Item item : items) {
             AgingItem agingItem = new AgingItem(item);
-            ItemCategory category = ItemCategory.fromItemName(agingItem.getName());
-            ItemAgingPolicy policy = AGING_POLICY.getPolicy(category);
+            ItemAgingPolicy policy = AGING_POLICY.getPolicy(agingItem.getCategory());
             policy.age(agingItem);
         }
     }

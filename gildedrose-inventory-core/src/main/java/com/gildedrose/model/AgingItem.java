@@ -42,6 +42,10 @@ public class AgingItem {
         item.quality=0;
     }
 
+    public ItemCategory getCategory(){
+        return ItemCategory.fromItemName(item.name);
+    }
+
     public void clampQualityBounds(int lowerBound, int upperBound) {
         item.quality = Math.max(item.quality, lowerBound);
         item.quality = Math.min(item.quality, upperBound);

@@ -7,7 +7,6 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public enum ItemAgingPolicyFactory {
-
     AGING_POLICY;
 
     private final Map<ItemCategory, ItemAgingPolicy> policyRegistry;
