@@ -11,7 +11,12 @@
 	<groupId>com.gildedrose</groupId>
 	<artifactId>gildedrose-inventory-engine</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>Gildedrose inventory engine</name>
+	<modules>
+		<module>gildedrose-inventory-core</module>
+		<module>gildedrose-inventory-coverage</module>
+	</modules>
 
 	<properties>
 		<java.version>17</java.version>
@@ -30,12 +35,15 @@
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>4.0.6</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 </project>
