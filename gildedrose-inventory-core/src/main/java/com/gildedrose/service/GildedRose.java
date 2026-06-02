@@ -1,6 +1,8 @@
 package com.gildedrose.service;
 
+import com.gildedrose.model.AgingItem;
 import com.gildedrose.model.Item;
+import lombok.val;
 
 import static com.gildedrose.model.ItemCategory.fromItemName;
 
@@ -13,51 +15,35 @@ class GildedRose {
 
     public void updateQuality() {
         for (Item item : items) {
-            switch (fromItemName(item.name)) {
+            val agingItem = new AgingItem(item);
+            switch (fromItemName(agingItem.getName())) {
                 case SULFURAS -> {
                     continue;
                 }
                 case AGED_BRIE -> {
-                    passOneDay(item);
-                    int valueToIncreaseQuality = (item.sellIn < 0) ? 2 : 1;
-                    improveQuality(item, valueToIncreaseQuality);
+                    agingItem.passOneDay();
+                    int valueToIncreaseQuality = (agingItem.isExpired()) ? 2 : 1;
+                    agingItem.improveQualityBy(valueToIncreaseQuality);
                 }
                 case BACKSTAGE_PASSES -> {
-                    passOneDay(item);
-                    if (item.sellIn < 0) {
+                    agingItem.passOneDay();
+                    if (agingItem.isExpired()) {
                         item.quality = 0;
-                    } else if (item.sellIn < 5) {
-                        improveQuality(item, 3);
-                    } else if (item.sellIn < 10) {
-                        improveQuality(item, 2);
+                    } else if (agingItem.getDaysRemaining() < 5) {
+                        agingItem.improveQualityBy(3);
+                    } else if (agingItem.getDaysRemaining() < 10) {
+                        agingItem.improveQualityBy(2);
                     } else {
-                        improveQuality(item, 1);
+                        agingItem.improveQualityBy(1);
                     }
                 }
                 case STANDARD -> {
-                    passOneDay(item);
-                    int valueToDecreaseQuality = (item.sellIn < 0) ? 2 : 1;
-                    degradeQuality(item, valueToDecreaseQuality);
+                    agingItem.passOneDay();
+                    int valueToDecreaseQuality = (agingItem.isExpired()) ? 2 : 1;
+                    agingItem.degradeQualityBy(valueToDecreaseQuality);
                 }
             }
-            clampQuality(item);
+            agingItem.clampQualityBounds(0, 50);
         }
-    }
-
-    private void improveQuality(Item item, int value) {
-        item.quality = item.quality + value;
-    }
-
-    private void degradeQuality(Item item, int value) {
-        item.quality = item.quality - value;
-    }
-
-    private void passOneDay(Item item) {
-        item.sellIn = item.sellIn - 1;
-    }
-
-    private void clampQuality(Item item) {
-        item.quality = Math.min(item.quality, 50);
-        item.quality = Math.max(item.quality, 0);
     }
 }
