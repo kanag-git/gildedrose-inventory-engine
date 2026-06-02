@@ -2,9 +2,7 @@ package com.gildedrose.service;
 
 import com.gildedrose.model.Item;
 
-import static com.gildedrose.model.ItemCategory.AGED_BRIE;
-import static com.gildedrose.model.ItemCategory.BACKSTAGE_PASSES;
-import static com.gildedrose.model.ItemCategory.SULFURAS;
+import static com.gildedrose.model.ItemCategory.fromItemName;
 
 class GildedRose {
     private final Item[] items;
@@ -15,63 +13,35 @@ class GildedRose {
 
     public void updateQuality() {
         for (Item item : items) {
-            if (!AGED_BRIE.getName().equals(item.name)
-                    && !BACKSTAGE_PASSES.getName().equals(item.name)) {
-                if (isQualityGreaterThanZero(item)) {
-                    if (!SULFURAS.getName().equals(item.name)) {
-                        degradeQuality(item, 1);
-                    }
+            switch (fromItemName(item.name)) {
+                case SULFURAS -> {
+                    continue;
                 }
-            } else {
-                if (isQualityLessThanFifty(item)) {
-                    improveQuality(item,1);
-
-                    if (BACKSTAGE_PASSES.getName().equals(item.name)) {
-                        if (item.sellIn < 11) {
-                            if (item.quality < 50) {
-                                improveQuality(item,1);
-                            }
-                        }
-
-                        if (item.sellIn < 6) {
-                            if (item.quality < 50) {
-                                improveQuality(item,1);
-                            }
-                        }
-                    }
+                case AGED_BRIE -> {
+                    passOneDay(item);
+                    int valueToIncreaseQuality = (item.sellIn < 0) ? 2 : 1;
+                    improveQuality(item, valueToIncreaseQuality);
                 }
-            }
-
-            if (!SULFURAS.getName().equals(item.name)) {
-                passOneDay(item);
-            }
-
-            if (item.sellIn < 0) {
-                if (!AGED_BRIE.getName().equals(item.name)) {
-                    if (!BACKSTAGE_PASSES.getName().equals(item.name)) {
-                        if (item.quality > 0) {
-                            if (!SULFURAS.getName().equals(item.name)) {
-                                degradeQuality(item, 1);
-                            }
-                        }
-                    } else {
+                case BACKSTAGE_PASSES -> {
+                    passOneDay(item);
+                    if (item.sellIn < 0) {
                         item.quality = 0;
-                    }
-                } else {
-                    if (item.quality < 50) {
-                        improveQuality(item,1);
+                    } else if (item.sellIn < 5) {
+                        improveQuality(item, 3);
+                    } else if (item.sellIn < 10) {
+                        improveQuality(item, 2);
+                    } else {
+                        improveQuality(item, 1);
                     }
                 }
+                case STANDARD -> {
+                    passOneDay(item);
+                    int valueToDecreaseQuality = (item.sellIn < 0) ? 2 : 1;
+                    degradeQuality(item, valueToDecreaseQuality);
+                }
             }
+            clampQuality(item);
         }
-    }
-
-    private boolean isQualityGreaterThanZero(Item item){
-        return item.quality > 0;
-    }
-
-    private boolean isQualityLessThanFifty(Item item){
-        return item.quality < 50;
     }
 
     private void improveQuality(Item item, int value) {
@@ -84,5 +54,10 @@ class GildedRose {
 
     private void passOneDay(Item item) {
         item.sellIn = item.sellIn - 1;
+    }
+
+    private void clampQuality(Item item) {
+        item.quality = Math.min(item.quality, 50);
+        item.quality = Math.max(item.quality, 0);
     }
 }
