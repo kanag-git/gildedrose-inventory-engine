@@ -38,6 +38,10 @@ public class AgingItem {
         return item.sellIn;
     }
 
+    public void ruinQuality(){
+        item.quality=0;
+    }
+
     public void clampQualityBounds(int lowerBound, int upperBound) {
         item.quality = Math.max(item.quality, lowerBound);
         item.quality = Math.min(item.quality, upperBound);

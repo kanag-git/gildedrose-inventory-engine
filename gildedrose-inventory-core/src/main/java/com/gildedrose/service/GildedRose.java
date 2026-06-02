@@ -1,12 +1,13 @@
 package com.gildedrose.service;
 
+import com.gildedrose.agingpolicy.ItemAgingPolicy;
 import com.gildedrose.model.AgingItem;
 import com.gildedrose.model.Item;
-import lombok.val;
+import com.gildedrose.model.ItemCategory;
 
-import static com.gildedrose.model.ItemCategory.fromItemName;
+import static com.gildedrose.agingpolicy.ItemAgingPolicyFactory.AGING_POLICY;
 
-class GildedRose {
+public class GildedRose {
     private final Item[] items;
 
     public GildedRose(Item[] items) {
@@ -15,35 +16,11 @@ class GildedRose {
 
     public void updateQuality() {
         for (Item item : items) {
-            val agingItem = new AgingItem(item);
-            switch (fromItemName(agingItem.getName())) {
-                case SULFURAS -> {
-                    continue;
-                }
-                case AGED_BRIE -> {
-                    agingItem.passOneDay();
-                    int valueToIncreaseQuality = (agingItem.isExpired()) ? 2 : 1;
-                    agingItem.improveQualityBy(valueToIncreaseQuality);
-                }
-                case BACKSTAGE_PASSES -> {
-                    agingItem.passOneDay();
-                    if (agingItem.isExpired()) {
-                        item.quality = 0;
-                    } else if (agingItem.getDaysRemaining() < 5) {
-                        agingItem.improveQualityBy(3);
-                    } else if (agingItem.getDaysRemaining() < 10) {
-                        agingItem.improveQualityBy(2);
-                    } else {
-                        agingItem.improveQualityBy(1);
-                    }
-                }
-                case STANDARD -> {
-                    agingItem.passOneDay();
-                    int valueToDecreaseQuality = (agingItem.isExpired()) ? 2 : 1;
-                    agingItem.degradeQualityBy(valueToDecreaseQuality);
-                }
-            }
-            agingItem.clampQualityBounds(0, 50);
+            AgingItem agingItem = new AgingItem(item);
+            ItemCategory category = ItemCategory.fromItemName(agingItem.getName());
+            ItemAgingPolicy policy = AGING_POLICY.getPolicy(category);
+            policy.age(agingItem);
         }
     }
+
 }
