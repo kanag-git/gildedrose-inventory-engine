@@ -17,4 +17,66 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.gildedrose</groupId>
+            <artifactId>gildedrose-inventory-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Setup executions per phase for the jacoco plugin -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <!-- Disable unused executions for this module by setting phase to 'none' -->
+                    <execution>
+                        <id>prepare-agent-jacoco</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>report-jacoco</id>
+                        <phase>none</phase>
+                    </execution>
+
+                    <!-- Merge execution data into single file for sonarqube -->
+                    <execution>
+                        <id>merge-jacoco-exec-data</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.basedir}/..</directory>
+                                    <includes>
+                                        <include>**/target/jacoco.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                            <destFile>${project.parent.build.directory}/jacoco.exec</destFile>
+                        </configuration>
+                    </execution>
+
+                    <!-- Generate the combined coverage report -->
+                    <execution>
+                        <id>generate-aggregate-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <title>Combined Coverage Report</title>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
 </project>
