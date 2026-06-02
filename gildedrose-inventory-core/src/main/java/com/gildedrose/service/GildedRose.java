@@ -1,9 +1,14 @@
 package com.gildedrose.service;
 
 import com.gildedrose.model.Item;
+import com.gildedrose.model.ItemCategory;
+
+import static com.gildedrose.model.ItemCategory.AGED_BRIE;
+import static com.gildedrose.model.ItemCategory.BACKSTAGE_PASSES;
+import static com.gildedrose.model.ItemCategory.SULFURAS;
 
 class GildedRose {
-    private Item[] items;
+    private final Item[] items;
 
     public GildedRose(Item[] items) {
         this.items = items;
@@ -11,10 +16,10 @@ class GildedRose {
 
     public void updateQuality() {
         for (Item item : items) {
-            if (!item.name.equals("Aged Brie")
-                    && !item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+            if (!AGED_BRIE.getName().equals(item.name)
+                    && !BACKSTAGE_PASSES.getName().equals(item.name)) {
                 if (item.quality > 0) {
-                    if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
+                    if (!SULFURAS.getName().equals(item.name)) {
                         item.quality = item.quality - 1;
                     }
                 }
@@ -22,7 +27,7 @@ class GildedRose {
                 if (item.quality < 50) {
                     item.quality = item.quality + 1;
 
-                    if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+                    if (BACKSTAGE_PASSES.getName().equals(item.name)) {
                         if (item.sellIn < 11) {
                             if (item.quality < 50) {
                                 item.quality = item.quality + 1;
@@ -38,15 +43,15 @@ class GildedRose {
                 }
             }
 
-            if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
+            if (!SULFURAS.getName().equals(item.name)) {
                 item.sellIn = item.sellIn - 1;
             }
 
             if (item.sellIn < 0) {
-                if (!item.name.equals("Aged Brie")) {
-                    if (!item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+                if (!AGED_BRIE.getName().equals(item.name)) {
+                    if (!BACKSTAGE_PASSES.getName().equals(item.name)) {
                         if (item.quality > 0) {
-                            if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
+                            if (!SULFURAS.getName().equals(item.name)) {
                                 item.quality = item.quality - 1;
                             }
                         }
