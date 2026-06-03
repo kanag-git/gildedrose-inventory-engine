@@ -1,10 +1,40 @@
 package com.gildedrose.service;
 
+import com.gildedrose.agingpolicy.AgedBrieAgingPolicy;
+import com.gildedrose.agingpolicy.BackstagePassesAgingPolicy;
+import com.gildedrose.agingpolicy.ItemAgingPolicyRegistry;
+import com.gildedrose.agingpolicy.ItemAgingPolicySettings;
+import com.gildedrose.agingpolicy.StandardItemAgingPolicy;
+import com.gildedrose.agingpolicy.SulfurasItemAgingPolicy;
 import com.gildedrose.model.Item;
+import lombok.val;
 import org.approvaltests.Approvals;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 public class GildedRoseApprovalTest {
+
+    private GildedRoseInventoryAgingService gildedRoseInventoryAgingPort;
+
+    @BeforeEach
+    void setUp() {
+        val standardPolicySettings = new ItemAgingPolicySettings.StandardPolicySettings(1, 2, 0, 50);
+        val agedBriePolicySettings = new ItemAgingPolicySettings.AgedBriePolicySettings(1, 2, 0, 50);
+        val backstagePassPolicySettings = new ItemAgingPolicySettings.BackstagePassPolicySettings(1, 10, 5, 0, 50);
+
+        val testPolicies = List.of(
+                new StandardItemAgingPolicy(standardPolicySettings),
+                new AgedBrieAgingPolicy(agedBriePolicySettings),
+                new BackstagePassesAgingPolicy(backstagePassPolicySettings),
+                new SulfurasItemAgingPolicy());
+
+        final ItemAgingPolicyRegistry itemAgingPolicyRegistry = new ItemAgingPolicyRegistry(testPolicies);
+
+        this.gildedRoseInventoryAgingPort = new GildedRoseInventoryServiceImpl(itemAgingPolicyRegistry);
+    }
+
     @Test
     public void verifyThirtyDaysOfInventoryUpdates() {
         // Arrange
@@ -19,7 +49,7 @@ public class GildedRoseApprovalTest {
                 new Item("Backstage passes to a TAFKAL80ETC concert", 5, 49),
                 new Item("Conjured Mana Cake", 3, 6) };
 
-        GildedRose gildedRose = new GildedRose(items);
+
         StringBuilder textLedger = new StringBuilder();
 
         //Act for 30 days
@@ -33,7 +63,7 @@ public class GildedRoseApprovalTest {
             }
             textLedger.append("\n");
 
-            gildedRose.updateQuality();
+            gildedRoseInventoryAgingPort.ageInventory(List.of(items));
         }
 
         // Assert

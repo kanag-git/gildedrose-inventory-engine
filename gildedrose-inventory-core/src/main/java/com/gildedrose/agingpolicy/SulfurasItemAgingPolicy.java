@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 import static com.gildedrose.model.ItemCategory.SULFURAS;
 
 @Component
-final class SulfurasItemAgingPolicy implements ItemAgingPolicy {
+public final class SulfurasItemAgingPolicy implements ItemAgingPolicy {
+
     @Override
     public void age(final AgingItem item) {
     }

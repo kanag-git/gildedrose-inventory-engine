@@ -8,25 +8,32 @@ import org.springframework.stereotype.Component;
 import static com.gildedrose.model.ItemCategory.BACKSTAGE_PASSES;
 
 @Component
-final class BackstagePassesAgingPolicy implements ItemAgingPolicy {
+public final class BackstagePassesAgingPolicy implements ItemAgingPolicy {
+    private final ItemAgingPolicySettings.BackstagePassPolicySettings backstagePassPolicySettings;
+
+    public BackstagePassesAgingPolicy(final ItemAgingPolicySettings.BackstagePassPolicySettings backstagePassPolicySettings) {
+        this.backstagePassPolicySettings = backstagePassPolicySettings;
+    }
+
     @Override
     public void age(AgingItem item) {
-        item.passOneDay();
         val days = item.getDaysRemaining();
 
-        if (days < 5) {
-            item.improveQualityBy( 3);
-        } else if (days < 10) {
-            item.improveQualityBy(2);
+        if (days <= backstagePassPolicySettings.tripleQualityIncreaseDayRange()) {
+            item.improveQualityBy(backstagePassPolicySettings.baseRate() * 3);
+        } else if (days <= backstagePassPolicySettings.doubleQualityIncreaseDayRange()) {
+            item.improveQualityBy(backstagePassPolicySettings.baseRate() * 2);
         } else {
-            item.improveQualityBy(1);
+            item.improveQualityBy(backstagePassPolicySettings.baseRate());
         }
+
+        item.passOneDay();
 
         if (item.isExpired()) {
             item.dropQualityToMin();
         }
 
-        item.clampQualityBounds(0, 50);
+        item.clampQualityBounds(backstagePassPolicySettings.minQuality(), backstagePassPolicySettings.maxQuality());
     }
 
     @Override

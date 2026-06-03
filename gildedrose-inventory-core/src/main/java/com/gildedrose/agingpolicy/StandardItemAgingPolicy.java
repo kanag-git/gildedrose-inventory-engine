@@ -6,13 +6,19 @@ import lombok.val;
 import org.springframework.stereotype.Component;
 
 @Component
-final class StandardItemAgingPolicy implements ItemAgingPolicy {
+public final class StandardItemAgingPolicy implements ItemAgingPolicy {
+    private final ItemAgingPolicySettings.StandardPolicySettings standardPolicySettings;
+
+    public StandardItemAgingPolicy(final ItemAgingPolicySettings.StandardPolicySettings standardPolicySettings) {
+        this.standardPolicySettings = standardPolicySettings;
+    }
+
     @Override
     public void age(AgingItem item) {
         item.passOneDay();
-        val degrade = (item.isExpired()) ? 2 : 1;
+        val degrade = (item.isExpired()) ? standardPolicySettings.expiredDegradeRate() : standardPolicySettings.degradeRate();
         item.degradeQualityBy(degrade);
-        item.clampQualityBounds(0, 50);
+        item.clampQualityBounds(standardPolicySettings.minQuality(), standardPolicySettings.maxQuality());
     }
 
     @Override
