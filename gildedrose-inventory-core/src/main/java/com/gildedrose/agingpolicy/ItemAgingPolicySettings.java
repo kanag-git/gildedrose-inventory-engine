@@ -29,4 +29,11 @@ public record ItemAgingPolicySettings(
             int maxQuality
     ) {
     }
+
+    public record ConjuredPolicySettings (
+            int degradeRate,
+            int expiredDegradeRate,
+            int minQuality,
+            int maxQuality
+    ){}
 }

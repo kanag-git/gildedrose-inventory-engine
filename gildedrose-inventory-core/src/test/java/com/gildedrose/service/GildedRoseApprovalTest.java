@@ -2,6 +2,7 @@ package com.gildedrose.service;
 
 import com.gildedrose.agingpolicy.AgedBrieAgingPolicy;
 import com.gildedrose.agingpolicy.BackstagePassesAgingPolicy;
+import com.gildedrose.agingpolicy.ConjuredItemAgingPolicy;
 import com.gildedrose.agingpolicy.ItemAgingPolicyRegistry;
 import com.gildedrose.agingpolicy.ItemAgingPolicySettings;
 import com.gildedrose.agingpolicy.StandardItemAgingPolicy;
@@ -23,14 +24,16 @@ public class GildedRoseApprovalTest {
         val standardPolicySettings = new ItemAgingPolicySettings.StandardPolicySettings(1, 2, 0, 50);
         val agedBriePolicySettings = new ItemAgingPolicySettings.AgedBriePolicySettings(1, 2, 0, 50);
         val backstagePassPolicySettings = new ItemAgingPolicySettings.BackstagePassPolicySettings(1, 10, 5, 0, 50);
+        val conjuredPolicySettings = new ItemAgingPolicySettings.ConjuredPolicySettings(2, 4, 0, 50);
 
         val testPolicies = List.of(
                 new StandardItemAgingPolicy(standardPolicySettings),
                 new AgedBrieAgingPolicy(agedBriePolicySettings),
                 new BackstagePassesAgingPolicy(backstagePassPolicySettings),
-                new SulfurasItemAgingPolicy());
+                new SulfurasItemAgingPolicy(),
+                new ConjuredItemAgingPolicy(conjuredPolicySettings));
 
-        final ItemAgingPolicyRegistry itemAgingPolicyRegistry = new ItemAgingPolicyRegistry(testPolicies);
+        val itemAgingPolicyRegistry = new ItemAgingPolicyRegistry(testPolicies);
 
         this.gildedRoseInventoryAgingPort = new GildedRoseInventoryServiceImpl(itemAgingPolicyRegistry);
     }
