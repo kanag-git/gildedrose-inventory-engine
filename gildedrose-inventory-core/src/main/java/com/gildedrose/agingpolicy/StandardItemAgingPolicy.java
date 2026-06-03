@@ -16,8 +16,8 @@ public final class StandardItemAgingPolicy implements ItemAgingPolicy {
     @Override
     public void age(AgingItem item) {
         item.passOneDay();
-        val degrade = (item.isExpired()) ? standardPolicySettings.expiredDegradeRate() : standardPolicySettings.degradeRate();
-        item.degradeQualityBy(degrade);
+        val qualityDegradeRate = (item.isExpired()) ? standardPolicySettings.expiredDegradeRate() : standardPolicySettings.degradeRate();
+        item.degradeQualityBy(qualityDegradeRate);
         item.clampQualityBounds(standardPolicySettings.minQuality(), standardPolicySettings.maxQuality());
     }
 
