@@ -7,17 +7,12 @@ import org.springframework.stereotype.Component;
 import static com.gildedrose.model.ItemCategory.AGED_BRIE;
 
 @Component
-public class AgedBrieAgingPolicy implements ItemAgingPolicy {
+public final class AgedBrieAgingPolicy implements ItemAgingPolicy {
     @Override
     public void age(AgingItem item) {
-        item.improveQualityBy(1);
-
         item.passOneDay();
-
-        if (item.isExpired()) {
-            item.improveQualityBy(1);
-        }
-
+        int improve = (item.isExpired()) ? 2 : 1;
+        item.improveQualityBy(improve);
         item.clampQualityBounds(0,50);
     }
 

@@ -38,8 +38,8 @@ public class AgingItem {
         return item.sellIn;
     }
 
-    public void ruinQuality(){
-        item.quality=0;
+    public void dropQualityToMin() {
+        item.quality = 0;
     }
 
     public ItemCategory getCategory(){

@@ -3,7 +3,6 @@ package com.gildedrose.service;
 import com.gildedrose.agingpolicy.ItemAgingPolicy;
 import com.gildedrose.model.AgingItem;
 import com.gildedrose.model.Item;
-import com.gildedrose.model.ItemCategory;
 
 import static com.gildedrose.agingpolicy.ItemAgingPolicyFactory.AGING_POLICY;
 
@@ -21,5 +20,4 @@ public class GildedRose {
             policy.age(agingItem);
         }
     }
-
 }
