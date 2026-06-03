@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import static com.gildedrose.model.ItemCategory.AGED_BRIE;
 
 @Component
-public final class AgedBrieAgingPolicy implements ItemAgingPolicy {
+final class AgedBrieAgingPolicy implements ItemAgingPolicy {
     @Override
     public void age(AgingItem item) {
         item.passOneDay();

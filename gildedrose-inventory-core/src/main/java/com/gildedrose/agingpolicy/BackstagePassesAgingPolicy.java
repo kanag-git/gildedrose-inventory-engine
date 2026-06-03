@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import static com.gildedrose.model.ItemCategory.BACKSTAGE_PASSES;
 
 @Component
-public final class BackstagePassesAgingPolicy implements ItemAgingPolicy {
+final class BackstagePassesAgingPolicy implements ItemAgingPolicy {
     @Override
     public void age(AgingItem item) {
         item.passOneDay();

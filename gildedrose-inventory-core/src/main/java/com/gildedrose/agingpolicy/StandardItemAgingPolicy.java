@@ -6,7 +6,7 @@ import lombok.val;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class StandardItemAgingPolicy implements ItemAgingPolicy {
+final class StandardItemAgingPolicy implements ItemAgingPolicy {
     @Override
     public void age(AgingItem item) {
         item.passOneDay();

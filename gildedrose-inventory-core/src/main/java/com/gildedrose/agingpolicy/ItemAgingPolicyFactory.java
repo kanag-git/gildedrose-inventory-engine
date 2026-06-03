@@ -1,11 +1,13 @@
 package com.gildedrose.agingpolicy;
 
 import com.gildedrose.model.ItemCategory;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
+@Component
 public enum ItemAgingPolicyFactory {
     AGING_POLICY;
 
