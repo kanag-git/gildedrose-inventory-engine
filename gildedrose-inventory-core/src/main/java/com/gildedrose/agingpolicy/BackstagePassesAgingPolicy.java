@@ -18,14 +18,14 @@ public final class BackstagePassesAgingPolicy implements ItemAgingPolicy {
     @Override
     public void age(AgingItem item) {
         val days = item.getDaysRemaining();
+        val baseRate = backstagePassPolicySettings.baseRate();
+        val qualityImprovementRate = backstagePassPolicySettings.tiers().stream()
+                                                          .filter(tier -> days <= tier.maxDaysRemaining())
+                                                          .mapToInt(ItemAgingPolicySettings.AgingTier::multiplier)
+                                                          .findFirst()
+                                                          .orElse(1);
 
-        if (days <= backstagePassPolicySettings.tripleQualityIncreaseDayRange()) {
-            item.improveQualityBy(backstagePassPolicySettings.baseRate() * 3);
-        } else if (days <= backstagePassPolicySettings.doubleQualityIncreaseDayRange()) {
-            item.improveQualityBy(backstagePassPolicySettings.baseRate() * 2);
-        } else {
-            item.improveQualityBy(backstagePassPolicySettings.baseRate());
-        }
+        item.improveQualityBy(baseRate * qualityImprovementRate);
 
         item.passOneDay();
 

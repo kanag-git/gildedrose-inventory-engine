@@ -23,7 +23,11 @@ public class GildedRoseApprovalTest {
     void setUp() {
         val standardPolicySettings = new ItemAgingPolicySettings.StandardPolicySettings(1, 2, 0, 50);
         val agedBriePolicySettings = new ItemAgingPolicySettings.AgedBriePolicySettings(1, 2, 0, 50);
-        val backstagePassPolicySettings = new ItemAgingPolicySettings.BackstagePassPolicySettings(1, 10, 5, 0, 50);
+
+        val backstagePassTierFor5Days = new ItemAgingPolicySettings.AgingTier(5, 3);
+        val backstagePassTierFor10Days = new ItemAgingPolicySettings.AgingTier(10, 2);
+        val backstagePassPolicySettings = new ItemAgingPolicySettings.BackstagePassPolicySettings(1, List.of(backstagePassTierFor5Days, backstagePassTierFor10Days), 0, 50);
+
         val conjuredPolicySettings = new ItemAgingPolicySettings.ConjuredPolicySettings(2, 4, 0, 50);
 
         val testPolicies = List.of(
