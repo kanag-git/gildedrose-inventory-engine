@@ -18,8 +18,8 @@
 		<module>gildedrose-inventory-core</module>
 		<module>gildedrose-inventory-database</module>
 		<module>gildedrose-inventory-adapters</module>
-		<module>gildedrose-inventory-coverage</module>
 		<module>gildedrose-inventory-service</module>
+		<module>gildedrose-inventory-coverage</module>
 	</modules>
 
 	<properties>
