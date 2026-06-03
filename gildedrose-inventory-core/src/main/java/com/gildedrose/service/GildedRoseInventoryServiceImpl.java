@@ -23,10 +23,11 @@ public class GildedRoseInventoryServiceImpl implements GildedRoseInventoryAgingS
             return;
         }
 
-        for (Item item : items) {
-            AgingItem agingItem = new AgingItem(item);
-            ItemAgingPolicy policy = itemAgingPolicyRegistry.getPolicyFor(agingItem.getCategory());
-            policy.age(agingItem);
-        }
+        items.stream()
+             .map(AgingItem::new)
+             .forEach(agingItem -> {
+                 ItemAgingPolicy policy = itemAgingPolicyRegistry.getPolicyFor(agingItem.getCategory());
+                 policy.age(agingItem);
+             });
     }
 }

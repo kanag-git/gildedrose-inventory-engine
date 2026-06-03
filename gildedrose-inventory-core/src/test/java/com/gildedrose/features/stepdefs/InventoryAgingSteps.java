@@ -7,7 +7,6 @@ import com.gildedrose.agingpolicy.ItemAgingPolicy;
 import com.gildedrose.agingpolicy.ItemAgingPolicyRegistry;
 import com.gildedrose.agingpolicy.ItemAgingPolicySettings;
 import com.gildedrose.agingpolicy.StandardItemAgingPolicy;
-import com.gildedrose.agingpolicy.SulfurasItemAgingPolicy;
 import com.gildedrose.model.Item;
 import com.gildedrose.service.GildedRoseInventoryAgingService;
 import com.gildedrose.service.GildedRoseInventoryServiceImpl;
@@ -39,7 +38,6 @@ public class InventoryAgingSteps {
                 new StandardItemAgingPolicy(standardPolicySettings),
                 new AgedBrieAgingPolicy(agedBriePolicySettings),
                 new BackstagePassesAgingPolicy(backstagePassPolicySettings),
-                new SulfurasItemAgingPolicy(),
                 new ConjuredItemAgingPolicy(conjuredPolicySettings));
 
         ItemAgingPolicyRegistry registry = new ItemAgingPolicyRegistry(strategies);

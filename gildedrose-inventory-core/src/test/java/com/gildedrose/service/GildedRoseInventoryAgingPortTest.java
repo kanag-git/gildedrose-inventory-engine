@@ -6,7 +6,6 @@ import com.gildedrose.agingpolicy.ConjuredItemAgingPolicy;
 import com.gildedrose.agingpolicy.ItemAgingPolicyRegistry;
 import com.gildedrose.agingpolicy.ItemAgingPolicySettings;
 import com.gildedrose.agingpolicy.StandardItemAgingPolicy;
-import com.gildedrose.agingpolicy.SulfurasItemAgingPolicy;
 import com.gildedrose.model.Item;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +38,6 @@ final class GildedRoseInventoryAgingPortTest {
                 new StandardItemAgingPolicy(standardPolicySettings),
                 new AgedBrieAgingPolicy(agedBriePolicySettings),
                 new BackstagePassesAgingPolicy(backstagePassPolicySettings),
-                new SulfurasItemAgingPolicy(),
                 new ConjuredItemAgingPolicy(conjuredPolicySettings));
 
         val itemAgingPolicyRegistry = new ItemAgingPolicyRegistry(testPolicies);

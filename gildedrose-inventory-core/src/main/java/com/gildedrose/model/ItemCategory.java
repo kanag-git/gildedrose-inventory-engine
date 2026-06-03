@@ -1,14 +1,17 @@
 package com.gildedrose.model;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
 public enum ItemCategory {
-    AGED_BRIE("Aged Brie"),
-    BACKSTAGE_PASSES("Backstage passes to a TAFKAL80ETC concert"),
-    SULFURAS("Sulfuras, Hand of Ragnaros"),
-    CONJURED("Conjured Mana Cake"),
-    STANDARD("Standard");
+    AGED_BRIE("Aged Brie", false),
+    BACKSTAGE_PASSES("Backstage passes to a TAFKAL80ETC concert", false),
+    SULFURAS("Sulfuras, Hand of Ragnaros", true),
+    CONJURED("Conjured Mana Cake", false),
+    STANDARD("Standard", false);
 
     private static final Map<String, ItemCategory> REGISTRY = new HashMap<>();
 
@@ -21,9 +24,12 @@ public enum ItemCategory {
     }
 
     private final String name;
+    private final boolean isSkipOperation;
 
-    ItemCategory(String name) {
+    ItemCategory(String name,
+                 boolean isSkipOperation) {
         this.name = name;
+        this.isSkipOperation = isSkipOperation;
     }
 
     public static ItemCategory fromItemName(String itemName) {
@@ -33,7 +39,4 @@ public enum ItemCategory {
         return REGISTRY.getOrDefault(itemName, STANDARD);
     }
 
-    public String getName() {
-        return name;
-    }
 }
