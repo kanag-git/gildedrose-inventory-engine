@@ -242,6 +242,38 @@ final class GildedRoseInventoryAgingPortTest {
             assertThat(backstageItems.get(1).quality).isEqualTo(16);
             assertThat(backstageItems.get(1).sellIn).isEqualTo(14);
         }
+    }
 
+    @Nested
+    @DisplayName("Conjured Items test suite")
+    class ConjuredItemTestSuite {
+
+        @Test
+        @DisplayName("When sellIn day passes and item is not expired, Then quality decreases by 2")
+        void qualityDecreasesByTwoWhenDayPasses() {
+            //Given
+            final var conjuredItems = List.of(new Item("Conjured Mana Cake", 10, 20));
+
+            //When
+            gildedRoseInventoryAgingPort.ageInventory(conjuredItems);
+
+            //Then
+            assertThat(conjuredItems.get(0).quality).isEqualTo(18);
+            assertThat(conjuredItems.get(0).sellIn).isEqualTo(9);
+        }
+
+        @Test
+        @DisplayName("When expired, Then quality decreases twice as fast by 4")
+        void qualityDecreasesByFourWhenExpired() {
+            //Given
+            final var conjuredItems = List.of(new Item("Conjured Mana Cake", 0, 20));
+
+            //When
+            gildedRoseInventoryAgingPort.ageInventory(conjuredItems);
+
+            //Then
+            assertThat(conjuredItems.get(0).quality).isEqualTo(16);
+            assertThat(conjuredItems.get(0).sellIn).isEqualTo(-1);
+        }
     }
 }
