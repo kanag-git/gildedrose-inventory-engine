@@ -14,9 +14,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 final class GildedRoseInventoryAgingPortTest {
 
@@ -278,5 +280,17 @@ final class GildedRoseInventoryAgingPortTest {
             assertThat(conjuredItems.get(0).quality).isEqualTo(16);
             assertThat(conjuredItems.get(0).sellIn).isEqualTo(-1);
         }
+    }
+
+    @Test
+    @DisplayName("Should gracefully return when the items collection is null")
+    void shouldHandleNullInventoryGracefully() {
+        assertDoesNotThrow(() -> gildedRoseInventoryAgingPort.ageInventory(null), "The system should return immediately without throwing a NullPointerException when inventory is null.");
+    }
+
+    @Test
+    @DisplayName("Should gracefully return when the items collection is completely empty")
+    void shouldHandleEmptyInventoryGracefully() {
+        assertDoesNotThrow(() -> gildedRoseInventoryAgingPort.ageInventory(Collections.emptyList()), "The system should return immediately without throwing an exception when inventory is empty.");
     }
 }
