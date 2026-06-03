@@ -6,7 +6,6 @@ import com.gildedrose.agingpolicy.ConjuredItemAgingPolicy;
 import com.gildedrose.agingpolicy.ItemAgingPolicyRegistry;
 import com.gildedrose.agingpolicy.ItemAgingPolicySettings;
 import com.gildedrose.agingpolicy.StandardItemAgingPolicy;
-import com.gildedrose.agingpolicy.SulfurasItemAgingPolicy;
 import com.gildedrose.model.Item;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,25 +21,28 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 final class GildedRoseInventoryAgingPortTest {
 
-    private GildedRoseInventoryAgingService gildedRoseInventoryAgingPort;
+    private GildedRoseInventoryAgingService gildedRoseInventoryAgingService;
 
     @BeforeEach
     void setUp() {
         val standardPolicySettings = new ItemAgingPolicySettings.StandardPolicySettings(1, 2, 0, 50);
         val agedBriePolicySettings = new ItemAgingPolicySettings.AgedBriePolicySettings(1, 2, 0, 50);
-        val backstagePassPolicySettings = new ItemAgingPolicySettings.BackstagePassPolicySettings(1, 10, 5, 0, 50);
+
+        val backstagePassTierFor5Days = new ItemAgingPolicySettings.AgingTier(5, 3);
+        val backstagePassTierFor10Days = new ItemAgingPolicySettings.AgingTier(10, 2);
+        val backstagePassPolicySettings = new ItemAgingPolicySettings.BackstagePassPolicySettings(1, List.of(backstagePassTierFor5Days, backstagePassTierFor10Days), 0, 50);
+
         val conjuredPolicySettings = new ItemAgingPolicySettings.ConjuredPolicySettings(2, 4, 0, 50);
 
         val testPolicies = List.of(
                 new StandardItemAgingPolicy(standardPolicySettings),
                 new AgedBrieAgingPolicy(agedBriePolicySettings),
                 new BackstagePassesAgingPolicy(backstagePassPolicySettings),
-                new SulfurasItemAgingPolicy(),
                 new ConjuredItemAgingPolicy(conjuredPolicySettings));
 
         val itemAgingPolicyRegistry = new ItemAgingPolicyRegistry(testPolicies);
 
-        this.gildedRoseInventoryAgingPort = new GildedRoseInventoryServiceImpl(itemAgingPolicyRegistry);
+        this.gildedRoseInventoryAgingService = new GildedRoseInventoryServiceImpl(itemAgingPolicyRegistry);
     }
 
     @Nested
@@ -54,7 +56,7 @@ final class GildedRoseInventoryAgingPortTest {
                     new Item("Backstage passes to a TAFKAL80ETC concert", 0, 0));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(anyItems);
+            gildedRoseInventoryAgingService.ageInventory(anyItems);
 
             //Then
             assertThat(anyItems.get(0).quality).isEqualTo(0);
@@ -70,7 +72,7 @@ final class GildedRoseInventoryAgingPortTest {
                     new Item("Sulfuras, Hand of Ragnaros", 10, 80));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(standardItems);
+            gildedRoseInventoryAgingService.ageInventory(standardItems);
 
             //Then
             assertThat(standardItems.get(0).quality).isEqualTo(50);
@@ -81,38 +83,38 @@ final class GildedRoseInventoryAgingPortTest {
 
     @Nested
     @DisplayName("DefaultStandard or normal Items test suite")
-    class DefaultStandardItemTestSuite {
+    class StandardItemTestSuite {
 
         @Test
         @DisplayName("When sellIn day passes and quality is greater than zero, Then quality decreases by 1")
         void qualityGreaterThanZeroDecreasesByOneWhenDayPasses() {
             //Given
-            final var defaultStandardItem = List.of(new Item("+5 Dexterity Vest", 10, 20));
+            final var standardItem = List.of(new Item("+5 Dexterity Vest", 10, 20));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(defaultStandardItem);
+            gildedRoseInventoryAgingService.ageInventory(standardItem);
 
             //Then
-            assertThat(defaultStandardItem.get(0).quality).isEqualTo(19);
-            assertThat(defaultStandardItem.get(0).sellIn).isEqualTo(9);
+            assertThat(standardItem.get(0).quality).isEqualTo(19);
+            assertThat(standardItem.get(0).sellIn).isEqualTo(9);
         }
 
         @Test
         @DisplayName("When expired, Then quality decreases by two")
         void qualityDecreasedByTwoWhenExpired() {
             //Given
-            final var defaultStandardItems = List.of(new Item("+5 Dexterity Vest", 0, 20),
+            final var standardItem = List.of(new Item("+5 Dexterity Vest", 0, 20),
                     new Item("Sulfuras, Hand of Ragnaros", -1, 80));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(defaultStandardItems);
+            gildedRoseInventoryAgingService.ageInventory(standardItem);
 
             //Then
-            assertThat(defaultStandardItems.get(0).quality).isEqualTo(18);
-            assertThat(defaultStandardItems.get(0).sellIn).isEqualTo(-1);
+            assertThat(standardItem.get(0).quality).isEqualTo(18);
+            assertThat(standardItem.get(0).sellIn).isEqualTo(-1);
 
-            assertThat(defaultStandardItems.get(1).quality).isEqualTo(80);
-            assertThat(defaultStandardItems.get(1).sellIn).isEqualTo(-1);
+            assertThat(standardItem.get(1).quality).isEqualTo(80);
+            assertThat(standardItem.get(1).sellIn).isEqualTo(-1);
         }
     }
 
@@ -127,7 +129,7 @@ final class GildedRoseInventoryAgingPortTest {
             final var agedBrie = List.of(new Item("Aged Brie", 10, 20));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(agedBrie);
+            gildedRoseInventoryAgingService.ageInventory(agedBrie);
 
             //Then
             assertThat(agedBrie.get(0).quality).isEqualTo(21);
@@ -142,7 +144,7 @@ final class GildedRoseInventoryAgingPortTest {
                     new Item("Aged Brie", -1, 49));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(agedBrieItems);
+            gildedRoseInventoryAgingService.ageInventory(agedBrieItems);
 
             //Then
             assertThat(agedBrieItems.get(0).quality).isEqualTo(22);
@@ -164,7 +166,7 @@ final class GildedRoseInventoryAgingPortTest {
             final var sulfuras = List.of(new Item("Sulfuras, Hand of Ragnaros", 10, 80));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(sulfuras);
+            gildedRoseInventoryAgingService.ageInventory(sulfuras);
 
             //Then
             assertThat(sulfuras.get(0).quality).isEqualTo(80);
@@ -184,7 +186,7 @@ final class GildedRoseInventoryAgingPortTest {
                     , new Item("Backstage passes to a TAFKAL80ETC concert", 7, 15));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(backstageItems);
+            gildedRoseInventoryAgingService.ageInventory(backstageItems);
 
             //Then
             assertThat(backstageItems.get(0).quality).isEqualTo(22);
@@ -202,7 +204,7 @@ final class GildedRoseInventoryAgingPortTest {
                     , new Item("Backstage passes to a TAFKAL80ETC concert", 3, 50));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(backstageItems);
+            gildedRoseInventoryAgingService.ageInventory(backstageItems);
 
             //Then
             assertThat(backstageItems.get(0).quality).isEqualTo(50);
@@ -220,7 +222,7 @@ final class GildedRoseInventoryAgingPortTest {
                     , new Item("Backstage passes to a TAFKAL80ETC concert", 1, 15));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(backstageItems);
+            gildedRoseInventoryAgingService.ageInventory(backstageItems);
 
             //Then
             assertThat(backstageItems.get(0).quality).isEqualTo(23);
@@ -238,7 +240,7 @@ final class GildedRoseInventoryAgingPortTest {
                     , new Item("Backstage passes to a TAFKAL80ETC concert", 15, 15));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(backstageItems);
+            gildedRoseInventoryAgingService.ageInventory(backstageItems);
 
             //Then
             assertThat(backstageItems.get(0).quality).isEqualTo(21);
@@ -260,7 +262,7 @@ final class GildedRoseInventoryAgingPortTest {
             final var conjuredItems = List.of(new Item("Conjured Mana Cake", 10, 20));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(conjuredItems);
+            gildedRoseInventoryAgingService.ageInventory(conjuredItems);
 
             //Then
             assertThat(conjuredItems.get(0).quality).isEqualTo(18);
@@ -274,7 +276,7 @@ final class GildedRoseInventoryAgingPortTest {
             final var conjuredItems = List.of(new Item("Conjured Mana Cake", 0, 20));
 
             //When
-            gildedRoseInventoryAgingPort.ageInventory(conjuredItems);
+            gildedRoseInventoryAgingService.ageInventory(conjuredItems);
 
             //Then
             assertThat(conjuredItems.get(0).quality).isEqualTo(16);
@@ -285,12 +287,12 @@ final class GildedRoseInventoryAgingPortTest {
     @Test
     @DisplayName("Should gracefully return when the items collection is null")
     void shouldHandleNullInventoryGracefully() {
-        assertDoesNotThrow(() -> gildedRoseInventoryAgingPort.ageInventory(null), "The system should return immediately without throwing a NullPointerException when inventory is null.");
+        assertDoesNotThrow(() -> gildedRoseInventoryAgingService.ageInventory(null), "The system should return immediately without throwing a NullPointerException when inventory is null.");
     }
 
     @Test
     @DisplayName("Should gracefully return when the items collection is completely empty")
     void shouldHandleEmptyInventoryGracefully() {
-        assertDoesNotThrow(() -> gildedRoseInventoryAgingPort.ageInventory(Collections.emptyList()), "The system should return immediately without throwing an exception when inventory is empty.");
+        assertDoesNotThrow(() -> gildedRoseInventoryAgingService.ageInventory(Collections.emptyList()), "The system should return immediately without throwing an exception when inventory is empty.");
     }
 }

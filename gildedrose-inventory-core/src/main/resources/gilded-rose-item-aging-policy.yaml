@@ -18,7 +18,10 @@ gildedrose:
         max-quality: 50
       backstage-passes:
         base-rate: 1
-        double-quality-increase-day-range: 10
-        triple-quality-increase-day-range: 5
+        tiers:
+          - max-days-remaining: 5
+            multiplier: 3
+          - max-days-remaining: 10
+            multiplier: 2
         min-quality: 0
         max-quality: 50

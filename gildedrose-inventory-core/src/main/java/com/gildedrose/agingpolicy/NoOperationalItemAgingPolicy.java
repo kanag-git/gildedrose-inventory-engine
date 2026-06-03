@@ -2,12 +2,8 @@ package com.gildedrose.agingpolicy;
 
 import com.gildedrose.model.AgingItem;
 import com.gildedrose.model.ItemCategory;
-import org.springframework.stereotype.Component;
 
-import static com.gildedrose.model.ItemCategory.SULFURAS;
-
-@Component
-public final class SulfurasItemAgingPolicy implements ItemAgingPolicy {
+public final class NoOperationalItemAgingPolicy implements ItemAgingPolicy {
 
     @Override
     public void age(final AgingItem item) {
@@ -15,6 +11,6 @@ public final class SulfurasItemAgingPolicy implements ItemAgingPolicy {
 
     @Override
     public ItemCategory getCategory() {
-        return SULFURAS;
+        return null;
     }
 }

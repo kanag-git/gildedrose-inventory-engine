@@ -7,7 +7,6 @@ import com.gildedrose.agingpolicy.ItemAgingPolicy;
 import com.gildedrose.agingpolicy.ItemAgingPolicyRegistry;
 import com.gildedrose.agingpolicy.ItemAgingPolicySettings;
 import com.gildedrose.agingpolicy.StandardItemAgingPolicy;
-import com.gildedrose.agingpolicy.SulfurasItemAgingPolicy;
 import com.gildedrose.model.Item;
 import com.gildedrose.service.GildedRoseInventoryAgingService;
 import com.gildedrose.service.GildedRoseInventoryServiceImpl;
@@ -28,14 +27,17 @@ public class InventoryAgingSteps {
     public InventoryAgingSteps() {
         val standardPolicySettings = new ItemAgingPolicySettings.StandardPolicySettings(1, 2, 0, 50);
         val agedBriePolicySettings = new ItemAgingPolicySettings.AgedBriePolicySettings(1, 2, 0, 50);
-        val backstagePassPolicySettings = new ItemAgingPolicySettings.BackstagePassPolicySettings(1, 10, 5, 0, 50);
+
+        val backstagePassTierFor5Days = new ItemAgingPolicySettings.AgingTier(5, 3);
+        val backstagePassTierFor10Days = new ItemAgingPolicySettings.AgingTier(10, 2);
+        val backstagePassPolicySettings = new ItemAgingPolicySettings.BackstagePassPolicySettings(1, List.of(backstagePassTierFor5Days, backstagePassTierFor10Days), 0, 50);
+
         val conjuredPolicySettings = new ItemAgingPolicySettings.ConjuredPolicySettings(2, 4, 0, 50);
 
         List<ItemAgingPolicy> strategies = List.of(
                 new StandardItemAgingPolicy(standardPolicySettings),
                 new AgedBrieAgingPolicy(agedBriePolicySettings),
                 new BackstagePassesAgingPolicy(backstagePassPolicySettings),
-                new SulfurasItemAgingPolicy(),
                 new ConjuredItemAgingPolicy(conjuredPolicySettings));
 
         ItemAgingPolicyRegistry registry = new ItemAgingPolicyRegistry(strategies);

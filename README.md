@@ -41,12 +41,12 @@ When I took on the Gilded Rose Kata, my goal wasn't just to make the current cod
 Here is the exact step-by-step approach I took to turn it into a clean, future-proof system:
 
 ### Step 1: I built a safety net before touching production code
-Before changing a single line of application code, I established a bulletproof automated testing suite using **Junit Test**. I mapped out all the legacy business logic constraints—from standard item degradation to special rules like Aged Brie and concert ticket quality. Having this regression testing net meant that if any optimization steps accidentally broke an historical edge case, my test suite would flag it immediately. It gave me the absolute freedom to refactor aggressively.
+Before changing a single line of application code, I established a bulletproof automated testing suite using **Junit Test**. I mapped out all the legacy business logic constraints—from standard item degradation to special rules like Aged Brie and concert ticket quality. Having this regression testing net meant that if any optimization steps accidentally broke an historical edge case, my test suite would flag it immediately. It gave me the absolute freedom to refactor cleanly and deliberately.
 
-### Step 2: I broke down the monolith using Hexagonal Architecture
-To keep the core business rules completely safe from infrastructure changes, I migrated the project to a multi-module Maven design following **Ports and Adapters** principles.
+### Step 2: I created Hexagonal Architecture design
+To keep the core business rules completely safe from infrastructure changes, I adapted the project to a multi-module Maven design following **Ports and Adapters** principles.
 * I isolated the **Core module** to keep it pure meaning it has absolutely no knowledge of databases, or API protocols.
-* I then isolated the infrastructure layers, spinning up a dedicated **Database module** to manage JPA entities and an **Adapters module** to control infra layer.
+* I then isolated the infrastructure layers, spinning up a dedicated **Database module**(placeholder) to manage JPA entities and an **Adapters module**(placeholder) to control infra layer.
 
 ### Step 3: I killed the conditional blocks using Polymorphism
 To solve the maintenance nightmare of the massive `if-else` statement, I implemented the **Strategy Pattern**. I created a clean, unified `ItemAgingPolicy` interface and extracted each item's distinct behavior into its own standalone class—like `AgedBrieAgingPolicy`. This completely fulfills the **Open-Closed Principle**. If the business introduces a brand-new promotional item tomorrow, I don’t have to open up an existing file and risk introducing bugs; I just drop in a brand-new policy class.
