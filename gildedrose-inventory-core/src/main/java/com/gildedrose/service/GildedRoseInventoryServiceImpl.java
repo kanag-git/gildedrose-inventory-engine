@@ -4,9 +4,11 @@ import com.gildedrose.agingpolicy.ItemAgingPolicy;
 import com.gildedrose.agingpolicy.ItemAgingPolicyRegistry;
 import com.gildedrose.model.AgingItem;
 import com.gildedrose.model.Item;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class GildedRoseInventoryServiceImpl implements GildedRoseInventoryAgingService {
 
     private final ItemAgingPolicyRegistry itemAgingPolicyRegistry;
