@@ -17,6 +17,7 @@
 	<modules>
 		<module>gildedrose-inventory-core</module>
 		<module>gildedrose-inventory-coverage</module>
+		<module>gildedrose-inventory-service</module>
 	</modules>
 
 	<properties>

@@ -1,11 +1,14 @@
 package com.gildedrose.agingpolicy;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties(prefix = "gildedrose.item-aging.policy")
 public record ItemAgingPolicySettings(
-        StandardPolicySettings standardPolicySettings,
-        AgedBriePolicySettings agedBriePolicySettings,
-        BackstagePassPolicySettings backstagePassPolicySettings
+        StandardPolicySettings standard,
+        AgedBriePolicySettings agedBrie,
+        BackstagePassPolicySettings backstagePasses,
+        ConjuredPolicySettings conjured
 ) {
-    public ItemAgingPolicySettings {}
 
     public record StandardPolicySettings (
             int degradeRate,

@@ -1,0 +1,24 @@
+gildedrose:
+  item-aging:
+    policy:
+      standard:
+        degrade-rate: 1
+        expired-degrade-rate: 1
+        min-quality: 0
+        max-quality: 50
+      conjured:
+        degrade-rate: 2
+        expired-degrade-rate: 4
+        min-quality: 0
+        max-quality: 50
+      aged-brie:
+        improvement-rate: 1
+        expired-improvement-rate: 1
+        min-quality: 0
+        max-quality: 50
+      backstage-passes:
+        base-rate: 1
+        double-quality-increase-day-range: 10
+        triple-quality-increase-day-range: 5
+        min-quality: 0
+        max-quality: 50

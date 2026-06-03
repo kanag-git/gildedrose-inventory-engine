@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: gildedrose-inventory-engine
+
+  config:
+    import: "optional:classpath:gilded-rose-item-aging-policy.yaml"
+
+server:
+  port: 8080
