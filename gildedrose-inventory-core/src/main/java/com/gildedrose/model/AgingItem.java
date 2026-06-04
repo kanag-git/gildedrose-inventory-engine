@@ -10,16 +10,12 @@ public class AgingItem {
         this.item = item;
     }
 
-    public String getName() {
-        return item.name;
+    public int getQuality(){
+        return this.item.quality;
     }
 
     public boolean isExpired() {
         return item.sellIn < 0;
-    }
-
-    public boolean hasQuality() {
-        return item.quality > 0;
     }
 
     public void passOneDay() {
